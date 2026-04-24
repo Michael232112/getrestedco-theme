@@ -1,23 +1,26 @@
 <style>
-  /* Global Typography Overrides */
-  /* This ensures that all text elements inherit the correct font family from theme settings */
-
-  /* Basic text elements */
-  p, span, div, a, button, input, select, textarea, label, li {
-    font-family: var(--font-body-family-override, {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }});
+  /* PT1 typography hardening for mobile readability on wellness PDPs. */
+  :root {
+    --rested-body-min-size: 1.6rem;
+    --rested-heading-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   }
 
-  /* Heading elements */
+  p, span, div, a, button, input, select, textarea, label, li {
+    font-family: var(--font-body-family-override, {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }});
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
   h1, h2, h3, h4, h5, h6,
   .h1, .h2, .h3, .h4, .h5, .h6,
   [class*="title"],
   [class*="heading"],
   .title,
   .heading {
-    font-family: var(--font-heading-family-override, {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }});
+    font-family: var(--font-heading-family-override, var(--rested-heading-family), {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }});
+    line-height: 1.15;
   }
 
-  /* Special elements */
   .product-title,
   .product__title,
   .product-form__label,
@@ -27,10 +30,9 @@
   .main-collection-title,
   .main-title,
   .subtitle {
-    font-family: var(--font-heading-family-override, {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }});
+    font-family: var(--font-heading-family-override, var(--rested-heading-family), {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }});
   }
 
-  /* Rating components, reviews, benefits, and other common elements */
   .rating-component,
   .review-name,
   .review-text,
@@ -41,5 +43,40 @@
   .check-no,
   .text-value {
     font-family: var(--font-body-family-override, {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }});
+  }
+
+  .product__description,
+  .product__description p,
+  .product__description li,
+  .rte,
+  .rte p,
+  .rte li,
+  .accordion__content,
+  .accordion__content p,
+  .accordion__content li,
+  .review-text,
+  .benefit-text,
+  .emoji-benefits-list__item,
+  .text-with-icon__text,
+  .multicolumn-card__info p,
+  .shopify-policy__body,
+  .shopify-policy__body p,
+  .main-page-wrapper p,
+  .main-page-wrapper li,
+  .contact-form__field label,
+  .contact__fields label,
+  .spr-summary-caption,
+  .spr-review-content-body {
+    font-size: max(1em, var(--rested-body-min-size)) !important;
+    line-height: 1.55 !important;
+    letter-spacing: 0.01em;
+  }
+
+  .caption,
+  .product__text.caption-with-letter-spacing,
+  .icon-with-text__text,
+  small {
+    font-size: 1.4rem !important;
+    line-height: 1.45 !important;
   }
 </style>

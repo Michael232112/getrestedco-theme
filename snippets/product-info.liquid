@@ -765,6 +765,12 @@
           assign current_button_text = base_add_to_cart_text
         endif
 
+        assign normalized_button_text = current_button_text | downcase | strip
+        if normalized_button_text == 'add to cart' or normalized_button_text == 'shop now' or normalized_button_text == 'claim offer'
+          assign current_button_text = 'Get Yours Now'
+          assign text_for_js_init = current_button_text
+        endif
+
         assign button_text_for_initial_render = current_button_text
 
         assign adding_text = 'products.product.add_to_cart' | t

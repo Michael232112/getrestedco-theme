@@ -31,6 +31,11 @@
     assign button_text = 'sections.add_to_cart.button_text' | t
   endif
 
+  assign normalized_button_text = button_text | downcase | strip
+  if normalized_button_text == 'add to cart' or normalized_button_text == 'shop now' or normalized_button_text == 'claim offer'
+    assign button_text = 'Get Yours Now'
+  endif
+
   if section.settings.added_button_text != blank
     if section.settings.added_button_text contains '.'
       assign added_button_text = section.settings.added_button_text | t
