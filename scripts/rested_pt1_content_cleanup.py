@@ -55,12 +55,21 @@ def main() -> None:
     for block_id, replacement in {
         "custom_text_pdQQkk": "<p><strong>Compression-style relief</strong></p>",
         "custom_text_Fm3qaa": "<p>Soothing warmth for tired hands</p>",
+        "custom_text_BYd69L": "<p>Air compression + warmth</p>",
+        "custom_text_XLBwJd": "<p>For hands worn out by typing, cooking, crafting, and caregiving</p>",
     }.items():
         if block_id in product_blocks:
             before = product_blocks[block_id]["settings"].get("text")
             if before != replacement:
                 product_blocks[block_id]["settings"]["text"] = replacement
                 changes.append(f"product.{block_id}.text: {before!r} -> {replacement!r}")
+
+    for block_id in ("custom_text_LE8GRw", "custom_text_hJbHX8"):
+        if block_id in product_blocks:
+            before = product_blocks[block_id]["settings"].get("text")
+            if before:
+                product_blocks[block_id]["settings"]["text"] = ""
+                changes.append(f"product.{block_id}.text: {before!r} -> ''")
 
     if "custom_text_e7xkQT" in product_blocks:
         before = product_blocks["custom_text_e7xkQT"]["settings"].get("text")
