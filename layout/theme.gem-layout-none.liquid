@@ -1,0 +1,319 @@
+{% comment %}
+	GEMPAGES BUILDER (https://apps.shopify.com/gempages)
+
+	You SHOULD NOT modify source code in this file because
+	It is automatically generated from GEMPAGES BUILDER
+	Try to edit page with the live editor.
+{% endcomment %}
+<!doctype html>
+{% liquid
+  comment
+    Detect RTL languages and apply RTL direction when enabled
+    Calculate once and pass to snippets to avoid duplication
+  endcomment
+  assign rtl_locales = 'ar,he,fa,ur,sd,ku,dv' | split: ','
+  assign is_rtl_locale = false
+  if rtl_locales contains request.locale.iso_code
+    assign is_rtl_locale = true
+  endif
+%}
+<html
+  class="js"
+  lang="{{ request.locale.iso_code }}"
+  {% if is_rtl_locale %}
+    dir="rtl"
+  {% else %}
+    dir="ltr"
+  {% endif %}
+>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    {% comment %} Core Scripts {% endcomment %}
+    <script src="{{ 'product-form-controller.js' | asset_url }}"></script>  <!-- Not deferred because it's used immediately -->
+    <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'premium-attachment-kit.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'upsell-simple.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
+
+    {%- if settings.animations_reveal_on_scroll -%}
+      <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+
+    {% comment %} Subscription plans JSON (PDP only): window.__subscriptionPlansData from product object. {% endcomment %}
+    {% if template.name == 'product' %}
+      {% render 'subscription-plans-data', product: product %}
+    {% endif %}
+
+    {% comment %} Loaders: jQuery/Swiper on demand – no defer so sections can call before body parses {% endcomment %}
+    <script src="{{ 'theme-loaders.js' | asset_url }}"></script>
+
+    {% comment %} Font Loading {% endcomment %}
+    {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {%- endunless -%}
+
+    <!-- Custom font CSS -->
+    <link rel="stylesheet" href="{{ 'custom-font.css' | asset_url }}" type="text/css">
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {% render 'meta-tags' %}
+
+    {% comment %} Global Scripts {% endcomment %}
+    <script>
+      window.Shopify = window.Shopify || {};
+
+      Shopify.license_key = '{{ settings.license_key }}';
+      Shopify.money_format = "{{ shop.money_format }}";
+
+      Shopify.formatMoney = function(cents, format) {
+        if (typeof cents === 'string') {
+          cents = cents.replace('.', '');
+        }
+        cents = parseInt(cents, 10);
+
+        let value = '';
+        {% raw %}
+        const placeholderRegex = /{{\s*(\w+)\s*}}/;
+        {% endraw %}
+        const formatString = format || this.money_format;
+
+        function defaultOption(opt, def) {
+          return (typeof opt === 'undefined' ? def : opt);
+        }
+
+        function formatWithDelimiters(number, precision, thousands, decimal) {
+          precision = defaultOption(precision, 2);
+          thousands = defaultOption(thousands, ',');
+          decimal = defaultOption(decimal, '.');
+
+          if (isNaN(number) || number == null) return '0';
+
+          number = (number / 100).toFixed(precision);
+
+          const parts = number.split('.'),
+                dollars = parts[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + thousands),
+                centsPart = parts[1] ? (decimal + parts[1]) : '';
+
+          return dollars + centsPart;
+        }
+
+        const match = formatString.match(placeholderRegex);
+        if (!match || !match[1]) return formatString;
+
+        switch (match[1]) {
+          case 'amount':
+            value = formatWithDelimiters(cents, 2);
+            break;
+          case 'amount_no_decimals':
+            value = formatWithDelimiters(cents, 0);
+            break;
+          case 'amount_with_comma_separator':
+            value = formatWithDelimiters(cents, 2, '.', ',');
+            break;
+          case 'amount_no_decimals_with_comma_separator':
+            value = formatWithDelimiters(cents, 0, '.', ',');
+            break;
+          default:
+            value = formatWithDelimiters(cents, 2);
+        }
+
+        return formatString.replace(placeholderRegex, value);
+      };
+    </script>
+
+    <script>
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+
+      document.addEventListener('alpine:init', function() {
+        let freeShippingThreshhold = {{ settings.product_free_shipping | default: 0 | times: 100 }};
+        Alpine.store(AlpineStoreKeys.FREE_SHIPPING_THRESHHOLD_STORE, { freeShippingThreshhold });
+        elxr.log('FreeShippingThreshholdSetup', { freeShippingThreshhold }, 'debug');
+      });
+    </script>
+
+    <script>
+      window.shopUrl = '{{ request.origin }}';
+      window.routes = {
+        cart_add_url: '{{ routes.cart_add_url }}',
+        cart_change_url: '{{ routes.cart_change_url }}',
+        cart_update_url: '{{ routes.cart_update_url }}',
+        cart_url: '{{ routes.cart_url }}',
+        predictive_search_url: '{{ routes.predictive_search_url }}',
+      };
+
+      window.cartStrings = {
+        error: `{{ 'sections.cart.cart_error' | t }}`,
+        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+      };
+
+      window.variantStrings = {
+        addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+        soldOut: `{{ 'products.product.sold_out' | t }}`,
+        unavailable: `{{ 'products.product.unavailable' | t }}`,
+        unavailable_with_option: `{{ 'products.product.value_unavailable' | t: option_value: '[value]' }}`,
+      };
+
+      window.accessibilityStrings = {
+        imageAvailable: `{{ 'products.product.media.image_available' | t: index: '[index]' }}`,
+        shareSuccess: `{{ 'general.share.success_message' | t }}`,
+        recipientFormExpanded: `{{ 'recipient.form.expanded' | t }}`,
+        recipientFormCollapsed: `{{ 'recipient.form.collapsed' | t }}`,
+        countrySelectorSearchCount: `{{ 'localization.country_results_count' | t: count: '[count]' }}`,
+      };
+    </script>
+
+    {{ content_for_header }}
+
+    {% comment %} Theme Variables {% endcomment %}
+    {% render 'theme-variables', is_rtl_locale: is_rtl_locale %}
+
+    {% comment %} Base Styles {% endcomment %}
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+
+      html {
+        box-sizing: border-box;
+        font-size: calc(var(--font-body-scale) * 62.5%);
+        height: 100%;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+        margin: 0;
+        font-size: 1.5rem;
+        letter-spacing: var(--letter-spacing-body);
+        line-height: calc(1 + 0.8 / var(--font-body-scale));
+        font-family: var(--font-body-family);
+        font-style: var(--font-body-style);
+        font-weight: var(--font-body-weight);
+        color: rgba(var(--color-foreground), 0.75);
+        background-color: rgb(var(--color-background));
+      }
+
+      section {
+        color: rgba(var(--color-foreground), 0.75);
+        background-color: rgb(var(--color-background));
+      }
+
+      #MainContent {
+        flex-grow: 1;
+      }
+
+      @media screen and (min-width: 750px) {
+        body {
+          font-size: 1.6rem;
+        }
+      }
+    </style>
+
+    {% comment %} Button Styles {% endcomment %}
+    {% render 'button-styles' %}
+
+    {% comment %} Base Stylesheets {% endcomment %}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'global-headings.css' | asset_url | stylesheet_tag }}
+    {{ 'accent-typography.css' | asset_url | stylesheet_tag }}
+    {{ 'selective-heading-fonts.css' | asset_url | stylesheet_tag }}
+    {{ 'custom.css' | asset_url | stylesheet_tag }}
+    <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
+
+    {% comment %} Conditional Assets {% endcomment %}
+    {% render 'conditional-assets', is_rtl_locale: is_rtl_locale %}
+
+    {% comment %} Typography Loaders {% endcomment %}
+    {% render 'typography-loader' %}
+    {% render 'global-typography-fix' %}
+    {% render 'app-typography-fix' %}
+    {% render 'global-button-fix' %}
+    {% render 'enhanced-button-effects' %}
+    {% render 'global-title-fix' %}
+
+    {%- unless settings.type_body_font.system? -%}
+      {% comment %}theme-check-disable AssetPreload{% endcomment %}
+      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
+      {% comment %}theme-check-enable AssetPreload{% endcomment %}
+    {%- endunless -%}
+    {%- unless settings.type_header_font.system? -%}
+      {% comment %}theme-check-disable AssetPreload{% endcomment %}
+      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
+      {% comment %}theme-check-enable AssetPreload{% endcomment %}
+    {%- endunless -%}
+
+    {% comment %} Content Protection CSS {% endcomment %}
+    {% if settings.enable_content_protection %}
+    <style>
+      /* Disable text selection */
+      body {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Re-enable selection for input fields */
+      input, textarea {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+    </style>
+    {% endif %}
+
+    {% if settings.enable_image_protection %}
+    <style>
+      /* Prevent image dragging */
+      img {
+        -webkit-user-drag: none;
+        -khtml-user-drag: none;
+        -moz-user-drag: none;
+        -o-user-drag: none;
+        user-drag: none;
+        pointer-events: none;
+      }
+
+      /* Re-enable pointer events for clickable images */
+      a img {
+        pointer-events: auto;
+      }
+    </style>
+    {% endif %}
+  </head>
+
+  {% comment %} Body with Attributes {% endcomment %}
+  <body>
+<div class="gem-container">
+	{{ content_for_layout }}
+</div><!-- end .gem-container --></body>
+</html>
