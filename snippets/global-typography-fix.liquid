@@ -2,17 +2,6 @@
   /* Global Typography Overrides */
   /* This ensures that all text elements inherit the correct font family from theme settings */
 
-  :root {
-    /* Use a softer serif stack for headings without depending on theme editor font tokens. */
-    --font-heading-family-override: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-    --font-weight-bold-override: 600;
-  }
-
-  body {
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-
   /* Basic text elements */
   p, span, div, a, button, input, select, textarea, label, li {
     font-family: var(--font-body-family-override, {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }});
@@ -52,45 +41,5 @@
   .check-no,
   .text-value {
     font-family: var(--font-body-family-override, {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }});
-  }
-
-  /* Raise readability across the PDP and support content. */
-  p,
-  li,
-  label,
-  input,
-  select,
-  textarea,
-  .rte p,
-  .rte li,
-  .review-text,
-  .benefit-text,
-  .counter-text,
-  .feature-name,
-  .check-yes,
-  .check-no,
-  .text-value,
-  .sticky-add-to-cart__rating-text,
-  .delivery-text,
-  .delivery-date {
-    font-size: 1.6rem;
-    line-height: 1.6;
-  }
-
-  small,
-  .caption,
-  .caption-with-letter-spacing,
-  figcaption {
-    font-size: 1.4rem;
-    line-height: 1.5;
-  }
-
-  .product-title,
-  .product__title,
-  .product__title h1,
-  .main-title,
-  .page-title,
-  .section-header__title {
-    line-height: 1.15;
   }
 </style>

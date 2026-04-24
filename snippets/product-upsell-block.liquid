@@ -880,5 +880,7 @@
     }
   {% endstyle %}
 {% else %}
-  {% comment %} Hide empty upsell blocks instead of exposing editor placeholder copy to shoppers. {% endcomment %}
+  <div class="product-upsell-placeholder">
+    <p>Please select an upsell product in the block settings.</p>
+  </div>
 {% endif %}
