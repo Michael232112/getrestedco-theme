@@ -299,7 +299,7 @@
     --global-button-radius: {{ settings.global_button_radius | default: 8 }}px;
 
     /* Enhanced Global Button Colors */
-    --global-button-bg-color: {% if settings.global_button_background_color != blank %}{{ settings.global_button_background_color }}{% elsif settings.global_section_button_color != blank %}{{ settings.global_section_button_color }}{% else %}#EF4A65{% endif %};
+    --global-button-bg-color: {% if settings.global_section_button_color != blank %}{{ settings.global_section_button_color }}{% elsif settings.global_section_accent_1_color != blank %}{{ settings.global_section_accent_1_color }}{% elsif settings.global_button_background_color != blank %}{{ settings.global_button_background_color }}{% else %}#EF4A65{% endif %};
     --global-button-text-color: {% if settings.global_button_text_color_primary != blank %}{{ settings.global_button_text_color_primary }}{% elsif settings.global_section_button_text_color != blank %}{{ settings.global_section_button_text_color }}{% else %}#FFFFFF{% endif %};
     --global-button-border-color: {% if settings.global_button_border_color != blank %}{{ settings.global_button_border_color }}{% elsif settings.global_button_background_color != blank %}{{ settings.global_button_background_color }}{% else %}#EF4A65{% endif %};
     --global-button-border-width: {{ settings.global_button_border_width | default: 0 }}px;
@@ -307,7 +307,7 @@
     --global-button-bottom-border-color: {% if settings.global_button_bottom_border_color != blank %}{{ settings.global_button_bottom_border_color }}{% else %}#000000{% endif %};
 
     /* Hover & Focus Colors */
-    --global-button-hover-bg-color: {% if settings.global_button_hover_bg_color != blank %}{{ settings.global_button_hover_bg_color }}{% elsif settings.global_button_background_color != blank %}{{ settings.global_button_background_color | color_darken: 10 }}{% else %}#D63953{% endif %};
+    --global-button-hover-bg-color: {% if settings.global_section_button_color != blank %}{{ settings.global_section_button_color | color_darken: 8 }}{% elsif settings.global_section_accent_1_color != blank %}{{ settings.global_section_accent_1_color | color_darken: 8 }}{% elsif settings.global_button_hover_bg_color != blank %}{{ settings.global_button_hover_bg_color }}{% elsif settings.global_button_background_color != blank %}{{ settings.global_button_background_color | color_darken: 10 }}{% else %}#D63953{% endif %};
     --global-button-hover-text-color: {% if settings.global_button_hover_text_color != blank %}{{ settings.global_button_hover_text_color }}{% elsif settings.global_button_text_color_primary != blank %}{{ settings.global_button_text_color_primary }}{% else %}#FFFFFF{% endif %};
 
     /* Button Box Shadow Variables */
